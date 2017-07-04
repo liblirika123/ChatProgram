@@ -1,0 +1,11 @@
+
+public class Main {
+	ClientProgram cp = null;
+	public static void main(String[] args) {
+		//start();
+	}
+	
+	public static ClientProgram start() {
+		return null;
+	}
+}

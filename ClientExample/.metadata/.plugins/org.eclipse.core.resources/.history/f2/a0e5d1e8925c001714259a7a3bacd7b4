@@ -1,0 +1,40 @@
+import java.io.ObjectInputStream;
+import java.net.Socket;
+import java.util.Vector;
+import java.util.Iterator;
+
+public class UserListThread extends Thread {
+	ObjectInputStream ois = null;
+	IDList idl = null;
+	ChatForm cf = null;
+	Iterator<String> iter = null;
+	String s = null;
+	
+	public UserListThread(ChatForm cf, Socket s) {
+		this.cf = cf;
+		try {
+			ois = new ObjectInputStream(s.getInputStream());
+		} catch(Exception e) {
+			System.out.println("#User_List_Thread Exception");
+		}
+	}
+	
+	@Override
+	public synchronized void run() {
+		System.out.println("@run ¡¯¿‘");
+		try {
+			while(true) {
+				idl = (IDList) ois.readObject();
+				System.out.println("toString : " + idl.idList.toString());
+				iter = idl.idList.iterator();
+				System.out.println("@@@@@@");
+				while(iter.hasNext()) {
+					cf.listTA.append(iter.next() + "\n");
+				}
+			}
+		} catch(Exception e) {
+			System.out.println("#UserList Run Exception");
+			e.printStackTrace();
+		}
+	}
+}

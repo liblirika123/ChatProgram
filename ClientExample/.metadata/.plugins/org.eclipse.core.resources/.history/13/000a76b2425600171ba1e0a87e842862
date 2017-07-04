@@ -1,0 +1,86 @@
+import java.io.*;
+import java.net.*;
+
+public class ClientChatterTest {
+	public static void main(String[] args) {
+		ClientChatter chatter = new ClientChatter();
+		chatter.login();
+		chatter.ready();
+		
+		chatter.start(); // 수신 
+ 		chatter.transfer(); // 송신
+	}
+}
+
+class ClientChatter extends Thread{
+	Socket s = null;
+	String id;
+	
+	BufferedReader keyboard = null;
+	BufferedReader br = null;
+	PrintWriter pw = null;
+	
+	static String tranMsg = null;
+	static String sendMsg = null;
+	
+	public ClientChatter() {
+		try {
+			s = new Socket("localhost", 20000);
+			br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			pw = new PrintWriter(s.getOutputStream());
+			keyboard = new BufferedReader(new InputStreamReader(System.in));
+		} catch(Exception e) {
+			System.out.println(e);
+			System.out.println("#Socket 생성 or I/O 스트림 생성에서 예외 발생");
+		}
+	}
+	
+	public void login() {
+		try {
+			System.out.print("ID입력 : ");
+			pw.println(keyboard.readLine());
+			pw.flush();
+		} catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	// 메세지 수신
+	@Override
+	public void run() {
+		String message = "";
+		try {
+			while(!message.equals("stop")) {
+				message = br.readLine();
+				ChatForm.screen.append(message + "\n");
+				System.out.println(message);
+			}
+		} catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	// 메세지 송신
+	public void transfer() {
+		String message = "";
+		try {
+			while(!message.equals("stop")) {
+				System.out.print("메시지 입력 : ");
+				
+				pw.println(message);
+				pw.flush();
+			}
+		} catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void ready() {
+		try {
+			String message = br.readLine();
+			System.out.println(message);
+		} catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+}

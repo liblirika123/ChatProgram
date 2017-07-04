@@ -1,0 +1,18 @@
+
+public class ClientProgram {
+	static LoginForm lf = new LoginForm();
+	static ChatForm  cf = new ChatForm();
+	
+	public ClientProgram() {
+		lf.setVisible(true);
+	}
+	
+	public void openLoginForm() {
+		this.lfsetVisible(true);
+	}
+	
+	public void openChatForm() {
+		this.cf.setVisible(true);
+		this.cf.startClient();
+	}
+}

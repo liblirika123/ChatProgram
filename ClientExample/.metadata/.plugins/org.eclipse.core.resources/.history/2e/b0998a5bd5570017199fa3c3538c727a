@@ -1,0 +1,101 @@
+import java.io.*;
+import java.net.*;
+
+public class ClientChatterTest {
+	public static void main(String[] args) {
+		new ChatForm();
+		ClientChatter chatter = new ClientChatter();
+		chatter.login();
+	}
+}
+
+class ClientChatter extends Thread{
+	Socket s = null;
+	static String id;
+	
+	BufferedReader keyboard = null;
+	BufferedReader br = null;
+	PrintWriter pw = null;
+	
+	static StringBuffer tranMsg = null;
+	static boolean flag;
+	
+	public ClientChatter() {
+		try {
+			s = new Socket("localhost", 20000);
+			br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			pw = new PrintWriter(s.getOutputStream());
+			keyboard = new BufferedReader(new InputStreamReader(System.in));
+			
+			tranMsg = new StringBuffer("");
+			flag = true;
+		} catch(Exception e) {
+			System.out.println(e);
+			System.out.println("#Socket 생성 or I/O 스트림 생성에서 예외 발생");
+		}
+	}
+	
+	// 채팅서 사용할 닉네임 설정 메서드
+	public void login() {
+		try {
+			System.out.print("ID입력 : ");
+			id = keyboard.readLine();
+			pw.println(id);
+			pw.flush();
+
+			this.ready();
+			ClientChatter.tranMsg.append("#" + ClientChatter.id.toString() + "님이 방에 입장하셨습니다.");
+			this.start(); // 수신 
+	 		this.transfer(); // 송신
+		} catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void ready() {
+		try {
+			System.out.println("#대기중...");
+			String message = br.readLine();
+			System.out.println(message);
+		} catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	// 메세지 수신
+	@Override
+	public void run() {
+		String message = "";
+		try {
+			while(flag) {
+				message = br.readLine();
+				ChatForm.screen.append(message + "\n");
+				ChatForm.screen.setCaretPosition(ChatForm.screen.getText().length());
+				System.out.println(message);
+			}
+		} catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	// 메세지 송신
+	public void transfer() {
+		try {
+			while(flag) {
+				// send버튼이 눌릴때까지 while문을 이용해 대기
+				while(tranMsg.toString().equals("")) {
+					try {
+						Thread.sleep(100); // 0.5초씩 딜레이
+					} catch(Exception e) {
+						System.out.println(e);
+					}
+				}
+				pw.println(tranMsg.toString());
+				pw.flush();
+				tranMsg = new StringBuffer("");
+			}
+		} catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+}

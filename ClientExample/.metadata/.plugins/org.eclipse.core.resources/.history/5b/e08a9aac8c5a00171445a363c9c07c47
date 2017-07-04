@@ -1,0 +1,9 @@
+
+public class ClientProgram {
+	static LoginForm lf = null;
+	static ChatForm  cf = null;
+	
+	public ClientProgram() {
+		lf = new LoginForm();
+	}
+}

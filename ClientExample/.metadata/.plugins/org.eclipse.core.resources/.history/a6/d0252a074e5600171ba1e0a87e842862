@@ -1,0 +1,91 @@
+
+import java.awt.Toolkit;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
+
+public class ChatForm extends JFrame implements ActionListener {
+	static Toolkit tool = Toolkit.getDefaultToolkit();
+	private static final int WIN_WIDTH = (int)tool.getScreenSize().getWidth();
+	private static final int WIN_HEIGHT = (int)tool.getScreenSize().getHeight();
+	private static final int FRAME_WIDTH = 400;
+	private static final int FRAME_HEIGHT = 400;
+	private static final int FRAME_XPOS = WIN_WIDTH / 2 - FRAME_WIDTH / 2;
+	private static final int FRAME_YPOS = WIN_HEIGHT / 2 - FRAME_HEIGHT / 2;
+	
+	JPanel topP, btmP;
+	static JTextArea screen; // 채팅창 스크린
+	JTextArea inputTF; // 메시지 입력창
+	JButton sendBtn; // 메시지 보내기 버튼
+	JButton closeBtn; // 종료 버튼
+	
+	Border border = BorderFactory.createLineBorder(Color.black);
+	
+	public ChatForm() {
+		setTitle("Chat Form");
+		setLayout(new BorderLayout());
+		
+		topP = new JPanel();
+		topP.setLayout(new BorderLayout());
+		add(topP, BorderLayout.CENTER);
+		
+		btmP = new JPanel();
+		btmP.setLayout(null);
+		btmP.setPreferredSize(new Dimension(100, 80));
+		btmP.setBackground(Color.orange);
+		add(btmP, BorderLayout.SOUTH);
+		
+		screen = new JTextArea();
+		screen.setEnabled(false);
+		// disabled 상태일때의 글꼴 설정
+		screen.setDisabledTextColor(Color.black);
+		topP.add(screen, BorderLayout.CENTER);
+		
+		inputTF = new JTextArea();
+		inputTF.setBounds(10, 10, 270, 60);
+		inputTF.setBorder(border);
+		btmP.add(inputTF);
+		
+		sendBtn = new JButton("보내기");
+		sendBtn.setBounds(290, 10, 80, 25);
+		sendBtn.addActionListener(this);
+		btmP.add(sendBtn);
+		
+		closeBtn = new JButton("종료");
+		closeBtn.setBounds(290, 45, 80, 25);
+		closeBtn.addActionListener(this);
+		btmP.add(closeBtn);
+		
+		setBounds(FRAME_XPOS, FRAME_YPOS, FRAME_WIDTH, FRAME_HEIGHT);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JButton btn = (JButton)e.getSource();
+		
+		if(btn == sendBtn) {
+			ClientChatter.tranMsg = getInputText();
+			inputTF.setText("");
+		} else if(btn == closeBtn) {
+			this.dispose();
+		}
+	}
+	
+	public String getInputText() {
+		return inputTF.getText();
+	}
+}

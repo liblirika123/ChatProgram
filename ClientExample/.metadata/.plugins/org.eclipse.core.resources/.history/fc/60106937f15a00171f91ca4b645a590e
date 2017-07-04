@@ -1,0 +1,11 @@
+import java.io.*;
+import java.net.*;
+
+public class ClientChatterTest {
+	public static void main(String[] args) {
+		new ChatForm();
+		ClientChatter chatter = new ClientChatter();
+		chatter.login();
+	}
+}
+

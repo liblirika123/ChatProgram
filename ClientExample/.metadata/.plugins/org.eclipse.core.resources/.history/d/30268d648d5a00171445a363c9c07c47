@@ -1,0 +1,9 @@
+
+public class ClientProgram {
+	static LoginForm lf = new LoginForm();
+	static ChatForm  cf = new ChatForm();
+	
+	public ClientProgram() {
+		lf.setVisible(true);
+	}
+}

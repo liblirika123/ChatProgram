@@ -1,0 +1,37 @@
+
+public class ClientProgram {
+	LoginForm lf = new LoginForm();
+	ChatForm  cf = new ChatForm();
+	boolean flag = true;
+	
+	public ClientProgram() {
+		openLF();
+		checkLogin();
+	}
+	
+	public void checkLogin() {
+		while(flag) {try{ Thread.sleep(1000); System.out.println("@");} catch(Exception e) {}}
+		openCF();
+	}
+	
+	public void openLF() {
+		this.lf.setVisible(true);
+	}
+	
+	public void openCF() {
+		cf.setVisible(true);
+		cf.startClient();
+	}
+	
+	public ChatForm getCF() {
+		return cf;
+	}
+	
+	public LoginForm getLF() {
+		return lf;
+	}
+	
+	public ClientProgram getCP() {
+		return this;
+	}
+}

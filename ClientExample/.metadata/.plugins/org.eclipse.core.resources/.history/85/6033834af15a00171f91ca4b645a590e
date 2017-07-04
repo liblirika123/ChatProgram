@@ -1,0 +1,77 @@
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.Socket;
+
+public class OneOneChatClient {
+	static Socket s;
+	static DataInputStream din;
+	static DataOutputStream dout;
+	static BufferedReader br;
+	static String tra, rec; // tra : 송신, rec : 수신
+	
+	static Transmit tt;
+	static Receive rt;
+	
+	public OneOneChatClient() {
+		try {
+			// 클라이언트 송신, 수신을 위한 소켓, 스트림 생성
+			s = new Socket("localhost", 20000);
+			din = new DataInputStream(s.getInputStream());
+			dout = new DataOutputStream(s.getOutputStream());
+			br = new BufferedReader(new InputStreamReader(System.in));
+			
+			tra = rec = "";
+			
+			// 클라이언트 송신, 수신 쓰레드 활성화
+			tt = new Transmit();
+			rt = new Receive();
+			tt.start();
+			rt.start();
+		} catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	class Transmit extends Thread {
+		@Override
+		public void run() {
+			//System.out.println("tran");
+			while(!rec.equalsIgnoreCase("stop")) {
+				try {
+					//System.out.print("Me : ");
+					if(!rec.equalsIgnoreCase("stop"))
+						break;
+					tra = br.readLine();
+					dout.writeUTF(tra);
+					dout.flush();
+				} catch(Exception e) {
+					System.out.println(e);
+				}
+			}
+			System.out.println("#Server OFF");
+		}
+	}
+	
+	class Receive extends Thread {
+		@Override
+		public void run() {
+			//System.out.println("rec");
+			while(!rec.equalsIgnoreCase("stop")) {
+				try { 
+					if(!rec.equalsIgnoreCase("stop"))
+						break;
+					rec = din.readUTF();
+					System.out.println("Admin : " + rec);
+				} catch(Exception e) {
+					System.out.println(e);
+				}
+			}
+		}
+	}
+	
+	public static void main(String[] args) {
+		new OneOneChatClient();
+	}
+}

@@ -1,0 +1,26 @@
+
+public class ClientProgram {
+	LoginForm lf = new LoginForm();
+	ChatForm  cf = new ChatForm();
+	
+	public ClientProgram() {
+		openLoginForm();
+	}
+	
+	public void openLoginForm() {
+		this.lf.setVisible(true);
+	}
+	
+	public void openChatForm() {
+		cf.setVisible(true);
+		cf.startClient();
+	}
+	
+	public ChatForm getChatForm() {
+		return cf;
+	}
+	
+	public ClientProgram getClientProgram() {
+		return this;
+	}
+}

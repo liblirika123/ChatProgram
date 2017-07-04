@@ -1,0 +1,11 @@
+
+public class Main {
+	ClientProgram cp;
+	public static void main(String[] args) {
+		cp = new ClientProgram();
+	}
+	
+	public void getCP() {
+		return cp;
+	}
+}
